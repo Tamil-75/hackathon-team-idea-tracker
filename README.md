@@ -398,10 +398,12 @@ Possible future improvements:
 
 ## Team
 
-- Team Member 1
-- Team Member 2
-- Team Member 3
-- Team Member 4
+| Register Number | Name |
+|---|---|
+| 25AM115 | Tamil S |
+| 25AM112 | Suguna S |
+| 25AM113 | Sujith G |
+| 25AM114 | Sunitha S |
 
 ## License
 
