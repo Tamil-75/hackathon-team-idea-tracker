@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createTeam } from "../../api/teams";
 import TeamForm from "../../components/TeamForm";
 import Toast from "../../components/Toast";
+import PageHeader from "../../components/PageHeader";
 
 export default function CreateTeam() {
   const [loading, setLoading] = useState(false);
@@ -40,16 +41,14 @@ export default function CreateTeam() {
         />
       )}
 
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Create Team</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Create a new team and invite others to join
-        </p>
-      </div>
+      <PageHeader
+        title="Create Team"
+        subtitle="Create a new team and invite others to join"
+      />
 
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="rounded-xl border border-border bg-surface p-6">
         {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          <div className="mb-4 rounded-lg border border-status-rejected/20 bg-status-rejected/5 px-4 py-3 text-sm text-status-rejected">
             {error}
           </div>
         )}

@@ -14,15 +14,18 @@ export default function Toast({ message, type, onClose }: ToastProps) {
   }, [onClose]);
 
   const Icon = type === "success" ? CheckCircle : XCircle;
-  const bgColor = type === "success" ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200";
-  const iconColor = type === "success" ? "text-green-500" : "text-red-500";
-  const textColor = type === "success" ? "text-green-800" : "text-red-800";
+  const borderColor =
+    type === "success" ? "border-status-approved/20" : "border-status-rejected/20";
+  const iconColor = type === "success" ? "text-status-approved" : "text-status-rejected";
+  const textColor = type === "success" ? "text-status-approved" : "text-status-rejected";
 
   return (
-    <div className={`fixed right-4 top-4 z-50 flex items-center gap-3 rounded-lg border px-4 py-3 shadow-lg ${bgColor}`}>
+    <div
+      className={`fixed right-4 top-4 z-50 flex items-center gap-3 rounded-lg border bg-surface-elevated px-4 py-3 shadow-xl ${borderColor}`}
+    >
       <Icon className={`h-5 w-5 ${iconColor}`} />
       <p className={`text-sm font-medium ${textColor}`}>{message}</p>
-      <button onClick={onClose} className="ml-2 text-gray-400 hover:text-gray-600">
+      <button onClick={onClose} className="ml-2 text-text-tertiary hover:text-text-primary">
         <X className="h-4 w-4" />
       </button>
     </div>

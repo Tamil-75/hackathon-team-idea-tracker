@@ -18,23 +18,27 @@ export default function TeamCard({
   const canJoin = !isFull && !isAlreadyInTeam;
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-sm">
+    <div className="group rounded-xl border border-border bg-surface p-5 transition-all hover:border-border-strong hover:bg-surface-elevated">
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="text-base font-semibold text-gray-900">{team.name}</h3>
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate font-display text-base font-semibold text-text-primary">
+            {team.name}
+          </h3>
           {team.description && (
-            <p className="mt-1 text-sm text-gray-600">{team.description}</p>
+            <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-text-secondary">
+              {team.description}
+            </p>
           )}
         </div>
-        <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700">
-          <Crown className="h-3 w-3" />
+        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-surface-hover px-2.5 py-0.5 font-mono text-[10px] font-medium text-text-secondary">
+          <Crown className="h-3 w-3 text-accent" />
           {team.leader_name}
         </span>
       </div>
 
-      <div className="mt-4 flex items-center gap-4 text-sm text-gray-600">
-        <span className="inline-flex items-center gap-1">
-          <Users className="h-4 w-4" />
+      <div className="mt-4 flex items-center gap-4 font-mono text-[11px] text-text-tertiary">
+        <span className="inline-flex items-center gap-1.5">
+          <Users className="h-3.5 w-3.5" />
           {team.member_count}/{team.max_members}
         </span>
         <span>
@@ -49,7 +53,7 @@ export default function TeamCard({
           <button
             onClick={() => onJoin(team.id)}
             disabled={!canJoin || joining}
-            className="w-full rounded-lg bg-primary-600 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-lg bg-accent py-2.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white transition-all hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             {joining
               ? "Joining..."

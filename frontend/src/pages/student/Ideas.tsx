@@ -6,6 +6,7 @@ import type { Idea, IdeaStatus } from "../../types";
 import IdeaCard from "../../components/IdeaCard";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import EmptyState from "../../components/EmptyState";
+import PageHeader from "../../components/PageHeader";
 
 export default function Ideas() {
   const [ideas, setIdeas] = useState<Idea[]>([]);
@@ -54,40 +55,40 @@ export default function Ideas() {
 
   const hasFilters = search || statusFilter || categoryFilter;
 
+  const inputClass =
+    "rounded-lg border border-border bg-surface py-2 pl-9 pr-4 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 transition-colors";
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Ideas</h1>
-          <p className="mt-1 text-sm text-gray-600">
-            Manage and track your project ideas
-          </p>
-        </div>
-        <button
-          onClick={() => navigate("/ideas/create")}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
-        >
-          <Plus className="h-4 w-4" />
-          Create Idea
-        </button>
-      </div>
+      <PageHeader
+        title="My Ideas"
+        subtitle="Manage and track your project ideas"
+        actions={
+          <button
+            onClick={() => navigate("/ideas/create")}
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-accent-hover"
+          >
+            <Plus className="h-4 w-4" />
+            Create Idea
+          </button>
+        }
+      />
 
-      {/* Search and Filters */}
       <div className="space-y-3">
         <form onSubmit={handleSearch} className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search ideas..."
-              className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className={inputClass}
             />
           </div>
           <button
             type="submit"
-            className="rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
+            className="rounded-lg bg-accent px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-accent-hover"
           >
             Search
           </button>
@@ -95,11 +96,11 @@ export default function Ideas() {
 
         <div className="flex flex-wrap gap-2">
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Filter className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as IdeaStatus | "")}
-              className="rounded-lg border border-gray-300 py-2 pl-9 pr-8 text-sm focus:border-primary-500 focus:outline-none"
+              className="rounded-lg border border-border bg-surface py-2 pl-9 pr-8 text-sm text-text-primary focus:border-accent focus:outline-none"
             >
               <option value="">All Statuses</option>
               <option value="Draft">Draft</option>
@@ -114,31 +115,30 @@ export default function Ideas() {
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             placeholder="Filter by category..."
-            className="rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-primary-500 focus:outline-none"
+            className="rounded-lg border border-border bg-surface px-4 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
           />
           {hasFilters && (
             <button
               type="button"
               onClick={clearFilters}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="rounded-lg border border-border px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:bg-surface-hover hover:text-text-primary"
             >
-              Clear Filters
+              Clear
             </button>
           )}
         </div>
       </div>
 
-      {/* Ideas List */}
       {loading ? (
         <div className="flex h-64 items-center justify-center">
           <LoadingSpinner />
         </div>
       ) : error ? (
         <div className="flex h-64 flex-col items-center justify-center gap-4">
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm text-status-rejected">{error}</p>
           <button
             onClick={fetchIdeas}
-            className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            className="rounded-lg bg-accent px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-accent-hover"
           >
             Try Again
           </button>

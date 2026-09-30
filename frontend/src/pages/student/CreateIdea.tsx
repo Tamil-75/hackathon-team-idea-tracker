@@ -4,6 +4,8 @@ import { createIdea } from "../../api/ideas";
 import { getStudentDashboard } from "../../api/dashboard";
 import type { StudentDashboardResponse } from "../../types";
 import Toast from "../../components/Toast";
+import PageHeader from "../../components/PageHeader";
+import FormField from "../../components/FormField";
 
 export default function CreateIdea() {
   const [title, setTitle] = useState("");
@@ -26,7 +28,7 @@ export default function CreateIdea() {
         const dashboard = await getStudentDashboard();
         setUserTeam(dashboard.team);
       } catch {
-        // Ignore - user might not have team
+        // Ignore
       }
     };
     fetchTeam();
@@ -36,7 +38,6 @@ export default function CreateIdea() {
     e.preventDefault();
     setError("");
 
-    // Validation
     if (!title.trim() || title.length < 3 || title.length > 100) {
       setError("Title must be 3-150 characters.");
       return;
@@ -93,6 +94,9 @@ export default function CreateIdea() {
     }
   };
 
+  const inputClass =
+    "w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 transition-colors";
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       {toast && (
@@ -103,162 +107,132 @@ export default function CreateIdea() {
         />
       )}
 
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Create Idea</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Submit a new project idea for the hackathon
-        </p>
-      </div>
+      <PageHeader
+        title="Create Idea"
+        subtitle="Submit a new project idea for the hackathon"
+      />
 
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="rounded-xl border border-border bg-surface p-6">
         {error && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          <div className="mb-4 rounded-lg border border-status-rejected/20 bg-status-rejected/5 px-4 py-3 text-sm text-status-rejected">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Title <span className="text-red-500">*</span>
-            </label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <FormField label="Title" required hint={`${title.length}/150`}>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={150}
               required
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className={inputClass}
               placeholder="Enter idea title"
             />
-            <p className="mt-1 text-xs text-gray-500">{title.length}/150</p>
-          </div>
+          </FormField>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Description <span className="text-red-500">*</span>
-            </label>
+          <FormField label="Description" required hint={`${description.length}/2000`}>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               maxLength={2000}
               required
               rows={3}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className={inputClass}
               placeholder="Brief description of your idea"
             />
-            <p className="mt-1 text-xs text-gray-500">{description.length}/2000</p>
-          </div>
+          </FormField>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Problem Statement <span className="text-red-500">*</span>
-            </label>
+          <FormField label="Problem Statement" required hint={`${problemStatement.length}/2000`}>
             <textarea
               value={problemStatement}
               onChange={(e) => setProblemStatement(e.target.value)}
               maxLength={2000}
               required
               rows={3}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className={inputClass}
               placeholder="What problem does your idea solve?"
             />
-            <p className="mt-1 text-xs text-gray-500">{problemStatement.length}/2000</p>
-          </div>
+          </FormField>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Proposed Solution <span className="text-red-500">*</span>
-            </label>
+          <FormField label="Proposed Solution" required hint={`${proposedSolution.length}/2000`}>
             <textarea
               value={proposedSolution}
               onChange={(e) => setProposedSolution(e.target.value)}
               maxLength={2000}
               required
               rows={3}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className={inputClass}
               placeholder="How does your idea solve the problem?"
             />
-            <p className="mt-1 text-xs text-gray-500">{proposedSolution.length}/2000</p>
-          </div>
+          </FormField>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Category <span className="text-red-500">*</span>
-              </label>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FormField label="Category" required>
               <input
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 maxLength={100}
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className={inputClass}
                 placeholder="e.g., Healthcare, AI, Blockchain"
               />
-            </div>
+            </FormField>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
-                Technology Stack <span className="text-red-500">*</span>
-              </label>
+            <FormField label="Technology Stack" required>
               <input
                 type="text"
                 value={technologyStack}
                 onChange={(e) => setTechnologyStack(e.target.value)}
                 maxLength={255}
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                className={inputClass}
                 placeholder="e.g., Python, React, TensorFlow"
               />
-            </div>
+            </FormField>
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              GitHub URL
-            </label>
+          <FormField label="GitHub URL">
             <input
               type="url"
               value={githubUrl}
               onChange={(e) => setGithubUrl(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              className={inputClass}
               placeholder="https://github.com/username/repository"
             />
-          </div>
+          </FormField>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Team
-            </label>
+          <FormField label="Team">
             {userTeam ? (
               <select
                 value={teamId}
                 onChange={(e) => setTeamId(e.target.value ? parseInt(e.target.value, 10) : "")}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none"
+                className={inputClass}
               >
                 <option value="">No team</option>
                 <option value={userTeam.id}>{userTeam.name}</option>
               </select>
             ) : (
-              <p className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-500">
+              <p className="rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-text-tertiary">
                 You are not part of a team. You can create one later.
               </p>
             )}
-          </div>
+          </FormField>
 
           <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={() => navigate("/ideas")}
-              className="flex-1 rounded-lg border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="flex-1 rounded-lg border border-border py-2.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:bg-surface-hover hover:text-text-primary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 rounded-lg bg-primary-600 py-2.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+              className="flex-1 rounded-lg bg-accent py-2.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-accent-hover disabled:opacity-50"
             >
               {loading ? "Creating..." : "Create Idea"}
             </button>

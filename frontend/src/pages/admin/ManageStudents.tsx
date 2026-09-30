@@ -4,6 +4,7 @@ import { getAdminUsers } from "../../api/admin";
 import type { AdminUserResponse } from "../../types";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import EmptyState from "../../components/EmptyState";
+import PageHeader from "../../components/PageHeader";
 
 export default function ManageStudents() {
   const [users, setUsers] = useState<AdminUserResponse[]>([]);
@@ -33,7 +34,6 @@ export default function ManageStudents() {
     fetchUsers();
   }, [fetchUsers]);
 
-  // Local search/filter on returned data
   useEffect(() => {
     if (!search.trim()) {
       setFilteredUsers(users);
@@ -50,38 +50,37 @@ export default function ManageStudents() {
     );
   }, [search, users]);
 
+  const inputClass =
+    "w-full rounded-lg border border-border bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 transition-colors";
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Manage Students</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          View all registered users
-        </p>
-      </div>
+      <PageHeader
+        title="Manage Students"
+        subtitle="View all registered users"
+      />
 
-      {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by name, register number, or email..."
-          className="w-full rounded-lg border border-gray-300 py-2.5 pl-10 pr-4 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className={inputClass}
         />
       </div>
 
-      {/* Content */}
       {loading ? (
         <div className="flex h-64 items-center justify-center">
           <LoadingSpinner />
         </div>
       ) : error ? (
         <div className="flex h-64 flex-col items-center justify-center gap-4">
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm text-status-rejected">{error}</p>
           <button
             onClick={fetchUsers}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-accent-hover"
           >
             <RefreshCw className="h-4 w-4" />
             Try Again
@@ -94,57 +93,47 @@ export default function ManageStudents() {
           description={search ? "Try a different search term." : undefined}
         />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+          <table className="min-w-full divide-y divide-border">
+            <thead>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Register Number
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Team
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Created
-                </th>
+                {["Name", "Register Number", "Email", "Role", "Team", "Created"].map((header) => (
+                  <th
+                    key={header}
+                    className="px-6 py-3 text-left font-mono text-[10px] font-medium uppercase tracking-wider text-text-tertiary"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-border">
               {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                <tr key={user.id} className="transition-colors hover:bg-surface-hover">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-text-primary">
                     {user.name}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td className="whitespace-nowrap px-6 py-4 font-mono text-xs text-text-secondary">
                     {user.register_number}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-text-secondary">
                     {user.email}
                   </td>
                   <td className="whitespace-nowrap px-6 py-4">
                     <span
-                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      className={`inline-flex rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${
                         user.role === "admin"
-                          ? "bg-purple-50 text-purple-700"
-                          : "bg-blue-50 text-blue-700"
+                          ? "border-accent/20 bg-accent/10 text-accent"
+                          : "border-border bg-surface-hover text-text-secondary"
                       }`}
                     >
                       {user.role}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-text-secondary">
                     {user.team_name || "—"}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td className="whitespace-nowrap px-6 py-4 font-mono text-xs text-text-tertiary">
                     {new Date(user.created_at).toLocaleDateString()}
                   </td>
                 </tr>

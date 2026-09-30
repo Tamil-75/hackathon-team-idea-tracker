@@ -5,12 +5,14 @@ import {
   Users,
   LogOut,
   Menu,
-  Trophy,
   User,
   Lightbulb,
   Shield,
+  Terminal,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import RouteTransition from "./RouteTransition";
+import SystemClock from "./SystemClock";
 import type { ReactNode } from "react";
 
 interface LayoutProps {
@@ -44,96 +46,124 @@ export default function Layout({ children }: LayoutProps) {
 
   const links = isAdmin ? adminLinks : studentLinks;
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(`${path}/`);
+
+  // Longest matching link wins, so nested pages (e.g. /teams/3) keep the right section lit.
+  const activeLink = links
+    .filter((l) => isActive(l.to))
+    .sort((a, b) => b.to.length - a.to.length)[0];
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Mobile overlay */}
+    <div className="flex h-screen bg-transparent">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-20 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-20 bg-black/60 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 transform border-r border-gray-200 bg-white transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 transform border-r border-border bg-[#0c0c0e]/95 backdrop-blur-xl transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 lg:bg-surface ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-4">
-            <Trophy className="h-6 w-6 text-primary-600" />
-            <span className="text-sm font-bold text-gray-900">
-              Hackathon Tracker
-            </span>
+          <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 shadow-[0_0_14px_rgba(59,130,246,0.18)]">
+              <Terminal className="h-4 w-4 text-accent" />
+            </div>
+            <div>
+              <span className="font-display text-sm font-bold tracking-tight text-text-primary">
+                HACKTRACK
+              </span>
+              <span className="ml-1.5 font-mono text-[10px] font-medium text-text-tertiary">
+                // 26
+              </span>
+            </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 p-4">
-            {links.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive(link.to)
-                    ? "bg-primary-50 text-primary-700"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-              >
-                <link.icon className="h-5 w-5" />
-                {link.label}
-              </Link>
-            ))}
+          <div className="px-5 pb-1 pt-4 font-mono text-[9px] font-medium uppercase tracking-[0.22em] text-text-tertiary">
+            {isAdmin ? "CONTROL // NAV" : "SYSTEM // NAV"}
+          </div>
+
+          <nav className="flex-1 space-y-0.5 p-3 pt-1" aria-label="Main">
+            {links.map((link) => {
+              const active = activeLink?.to === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setSidebarOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-300 before:absolute before:-left-3 before:top-1/2 before:h-5 before:w-0.5 before:-translate-y-1/2 before:origin-center before:rounded-full before:bg-accent before:shadow-[0_0_10px_rgba(59,130,246,0.8)] before:transition-transform before:duration-300 ${
+                    active
+                      ? "bg-accent-subtle text-accent before:scale-y-100"
+                      : "text-text-secondary before:scale-y-0 hover:bg-surface-hover hover:text-text-primary"
+                  }`}
+                >
+                  <link.icon
+                    className={`h-4 w-4 transition-colors ${
+                      active ? "text-accent" : "text-text-tertiary group-hover:text-text-secondary"
+                    }`}
+                  />
+                  {link.label}
+                  {active && (
+                    <div className="status-dot is-pulsing ml-auto h-1.5 w-1.5 rounded-full bg-accent text-accent" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* User section */}
-          <div className="border-t border-gray-200 p-4">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-sm font-medium text-primary-700">
+          <div className="border-t border-border p-3">
+            <div className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 font-mono text-xs font-semibold text-accent">
                 {user?.name?.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-gray-900">
+                <p className="truncate text-sm font-medium text-text-primary">
                   {user?.name}
                 </p>
-                <p className="truncate text-xs text-gray-500">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-text-tertiary">
                   {user?.role}
                 </p>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-hover hover:text-status-rejected"
             >
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-4 w-4" />
               Logout
             </button>
           </div>
         </div>
       </aside>
 
-      {/* Main content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Top bar */}
-        <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 lg:px-6">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <header className="flex h-16 items-center justify-between gap-3 border-b border-border bg-surface px-4 backdrop-blur-md lg:px-6">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
+            aria-label="Open navigation"
+            className="rounded-lg p-2 text-text-secondary hover:bg-surface-hover hover:text-text-primary lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <span className="hidden sm:inline">Welcome back,</span>
-            <span className="font-medium text-gray-900">{user?.name}</span>
+          <div className="flex min-w-0 items-center gap-2 font-mono text-xs text-text-tertiary">
+            <span className="hidden sm:inline">HACKTRACK // 26</span>
+            <span className="hidden text-border-strong sm:inline">/</span>
+            <span className="truncate uppercase tracking-wider text-text-secondary">
+              {isAdmin ? "SYSTEM CONTROL" : "COMMAND CENTER"}
+              {activeLink ? ` // ${activeLink.label}` : ""}
+            </span>
           </div>
+          <SystemClock />
         </header>
 
-        {/* Page content */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-6">
+          <RouteTransition>{children}</RouteTransition>
+        </main>
       </div>
     </div>
   );

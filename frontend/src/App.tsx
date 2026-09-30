@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import SystemBackground from "./components/system/SystemBackground";
 import Landing from "./pages/public/Landing";
 import Login from "./pages/public/Login";
 import Register from "./pages/public/Register";
@@ -21,6 +22,8 @@ import ManageIdeas from "./pages/admin/ManageIdeas";
 
 export default function App() {
   return (
+    <>
+    <SystemBackground />
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<Landing />} />
@@ -164,5 +167,6 @@ export default function App() {
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }

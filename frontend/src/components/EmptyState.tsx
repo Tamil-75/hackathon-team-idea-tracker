@@ -12,13 +12,15 @@ export default function EmptyState({
   description,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center">
-      <div className="mb-3 rounded-full bg-gray-100 p-3">
-        <Icon className="h-6 w-6 text-gray-400" />
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface p-10 text-center">
+      <div className="mb-4 rounded-full bg-surface-hover p-3.5">
+        <Icon className="h-6 w-6 text-text-tertiary" />
       </div>
-      <h3 className="text-sm font-medium text-gray-900">{title}</h3>
+      <h3 className="font-display text-sm font-semibold text-text-primary">{title}</h3>
       {description && (
-        <p className="mt-1 text-sm text-gray-500">{description}</p>
+        <p className="mt-1 max-w-xs text-sm leading-relaxed text-text-tertiary">
+          {description}
+        </p>
       )}
     </div>
   );

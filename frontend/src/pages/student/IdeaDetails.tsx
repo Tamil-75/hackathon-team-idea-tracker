@@ -13,6 +13,7 @@ import {
 import { getIdea, deleteIdea, submitIdea } from "../../api/ideas";
 import type { Idea } from "../../types";
 import StatusBadge from "../../components/StatusBadge";
+import WorkflowTracker from "../../components/WorkflowTracker";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Toast from "../../components/Toast";
@@ -97,10 +98,10 @@ export default function IdeaDetails() {
   if (error || !idea) {
     return (
       <div className="flex h-64 flex-col items-center justify-center gap-4">
-        <p className="text-sm text-red-600">{error || "Idea not found."}</p>
+        <p className="text-sm text-status-rejected">{error || "Idea not found."}</p>
         <Link
           to="/ideas"
-          className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+          className="rounded-lg bg-accent px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-accent-hover"
         >
           Back to Ideas
         </Link>
@@ -148,12 +149,12 @@ export default function IdeaDetails() {
       <div className="flex items-center gap-4">
         <Link
           to="/ideas"
-          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+          className="rounded-lg border border-border p-2 text-text-secondary hover:bg-surface-hover hover:text-text-primary"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-900">{idea.title}</h1>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-text-primary">{idea.title}</h1>
         </div>
         <StatusBadge status={idea.status} />
       </div>
@@ -164,7 +165,7 @@ export default function IdeaDetails() {
           {canEdit && (
             <Link
               to={`/ideas/${ideaId}/edit`}
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:bg-surface-hover hover:text-text-primary"
             >
               <Edit className="h-4 w-4" />
               Edit
@@ -173,7 +174,7 @@ export default function IdeaDetails() {
           {canSubmit && (
             <button
               onClick={() => setShowSubmitDialog(true)}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-3 py-2 text-sm font-medium text-white hover:bg-primary-700"
+              className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-white hover:bg-accent-hover"
             >
               <Send className="h-4 w-4" />
               Submit
@@ -182,7 +183,7 @@ export default function IdeaDetails() {
           {canDelete && (
             <button
               onClick={() => setShowDeleteDialog(true)}
-              className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+              className="inline-flex items-center gap-2 rounded-lg border border-status-rejected/20 px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-wider text-status-rejected hover:bg-status-rejected/5"
             >
               <Trash2 className="h-4 w-4" />
               Delete
@@ -191,60 +192,51 @@ export default function IdeaDetails() {
         </div>
       )}
 
+      {/* Workflow Tracker */}
+      <div className="rounded-xl border border-border bg-surface p-6">
+        <WorkflowTracker status={idea.status} />
+      </div>
+
       {/* Details */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="rounded-xl border border-border bg-surface p-6">
         <div className="space-y-6">
           <div>
-            <h3 className="text-sm font-medium text-gray-500">Description</h3>
-            <p className="mt-1 text-sm text-gray-900">{idea.description}</p>
+            <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Description</h3>
+            <p className="mt-2 text-sm leading-relaxed text-text-primary">{idea.description}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-500">
-              Problem Statement
-            </h3>
-            <p className="mt-1 text-sm text-gray-900">
-              {idea.problem_statement}
-            </p>
+            <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Problem Statement</h3>
+            <p className="mt-2 text-sm leading-relaxed text-text-primary">{idea.problem_statement}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-500">
-              Proposed Solution
-            </h3>
-            <p className="mt-1 text-sm text-gray-900">
-              {idea.proposed_solution}
-            </p>
+            <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Proposed Solution</h3>
+            <p className="mt-2 text-sm leading-relaxed text-text-primary">{idea.proposed_solution}</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Category</h3>
-              <p className="mt-1 inline-flex items-center gap-1 text-sm text-gray-900">
-                <Tag className="h-4 w-4" />
+              <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Category</h3>
+              <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-text-primary">
+                <Tag className="h-4 w-4 text-text-tertiary" />
                 {idea.category}
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">
-                Technology Stack
-              </h3>
-              <p className="mt-1 text-sm text-gray-900">
-                {idea.technology_stack || "Not specified"}
-              </p>
+              <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Technology Stack</h3>
+              <p className="mt-1 text-sm text-text-primary">{idea.technology_stack || "Not specified"}</p>
             </div>
           </div>
 
           {idea.github_url && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500">
-                GitHub Repository
-              </h3>
+              <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">GitHub Repository</h3>
               <a
                 href={idea.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 inline-flex items-center gap-1 text-sm text-primary-600 hover:text-primary-700"
+                className="mt-1 inline-flex items-center gap-1.5 text-sm text-accent hover:text-accent-hover"
               >
                 <Github className="h-4 w-4" />
                 {idea.github_url}
@@ -254,9 +246,9 @@ export default function IdeaDetails() {
 
           {idea.team_name && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Team</h3>
-              <p className="mt-1 inline-flex items-center gap-1 text-sm text-gray-900">
-                <Users className="h-4 w-4" />
+              <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Team</h3>
+              <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-text-primary">
+                <Users className="h-4 w-4 text-text-tertiary" />
                 {idea.team_name}
               </p>
             </div>
@@ -264,16 +256,16 @@ export default function IdeaDetails() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Created</h3>
-              <p className="mt-1 inline-flex items-center gap-1 text-sm text-gray-900">
-                <Calendar className="h-4 w-4" />
+              <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Created</h3>
+              <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-text-primary">
+                <Calendar className="h-4 w-4 text-text-tertiary" />
                 {new Date(idea.created_at).toLocaleDateString()}
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Updated</h3>
-              <p className="mt-1 inline-flex items-center gap-1 text-sm text-gray-900">
-                <Calendar className="h-4 w-4" />
+              <h3 className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-tertiary">Updated</h3>
+              <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-text-primary">
+                <Calendar className="h-4 w-4 text-text-tertiary" />
                 {new Date(idea.updated_at).toLocaleDateString()}
               </p>
             </div>

@@ -60,17 +60,20 @@ export default function TeamForm({
     });
   };
 
+  const inputClass =
+    "w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent/30 transition-colors";
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <div className="rounded-lg border border-status-rejected/20 bg-status-rejected/5 px-4 py-3 text-sm text-status-rejected">
           {error}
         </div>
       )}
 
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Team Name <span className="text-red-500">*</span>
+      <div className="space-y-1.5">
+        <label className="block font-mono text-[11px] font-medium uppercase tracking-wider text-text-secondary">
+          Team Name <span className="ml-1 text-accent">*</span>
         </label>
         <input
           type="text"
@@ -78,13 +81,13 @@ export default function TeamForm({
           onChange={(e) => setName(e.target.value)}
           maxLength={100}
           required
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className={inputClass}
           placeholder="Enter team name"
         />
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
+      <div className="space-y-1.5">
+        <label className="block font-mono text-[11px] font-medium uppercase tracking-wider text-text-secondary">
           Description
         </label>
         <textarea
@@ -92,17 +95,17 @@ export default function TeamForm({
           onChange={(e) => setDescription(e.target.value)}
           maxLength={500}
           rows={3}
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className={inputClass}
           placeholder="Describe your team (optional)"
         />
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="font-mono text-[10px] text-text-tertiary">
           {description.length}/500
         </p>
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium text-gray-700">
-          Maximum Members <span className="text-red-500">*</span>
+      <div className="space-y-1.5">
+        <label className="block font-mono text-[11px] font-medium uppercase tracking-wider text-text-secondary">
+          Maximum Members <span className="ml-1 text-accent">*</span>
         </label>
         <input
           type="number"
@@ -111,9 +114,9 @@ export default function TeamForm({
           min={2}
           max={10}
           required
-          className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          className={inputClass}
         />
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="font-mono text-[10px] text-text-tertiary">
           Between 2 and 10 members
         </p>
       </div>
@@ -123,7 +126,7 @@ export default function TeamForm({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-lg border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="flex-1 rounded-lg border border-border py-2.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
           >
             Cancel
           </button>
@@ -131,7 +134,7 @@ export default function TeamForm({
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 rounded-lg bg-primary-600 py-2.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+          className="flex-1 rounded-lg bg-accent py-2.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
         >
           {loading ? "Saving..." : submitLabel}
         </button>

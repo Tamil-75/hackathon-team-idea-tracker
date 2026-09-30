@@ -12,7 +12,7 @@ export default function TeamMemberList({
 }: TeamMemberListProps) {
   if (members.length === 0) {
     return (
-      <p className="text-sm text-gray-500">No members in this team.</p>
+      <p className="font-mono text-[11px] text-text-tertiary">No members in this team.</p>
     );
   }
 
@@ -21,25 +21,27 @@ export default function TeamMemberList({
       {members.map((member) => (
         <div
           key={member.id}
-          className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-4 py-3"
+          className="flex items-center justify-between rounded-lg border border-border bg-background px-4 py-3 transition-colors hover:border-border-strong"
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100">
-              <User className="h-4 w-4 text-primary-600" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/10">
+              <User className="h-4 w-4 text-accent" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-sm font-medium text-text-primary">
                 {member.name}
                 {member.user_id === currentUserId && (
-                  <span className="ml-2 text-xs text-gray-500">(You)</span>
+                  <span className="ml-2 font-mono text-[10px] uppercase tracking-wider text-accent">
+                    (You)
+                  </span>
                 )}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="font-mono text-[11px] text-text-tertiary">
                 {member.register_number}
               </p>
             </div>
           </div>
-          <span className="text-xs text-gray-500">
+          <span className="font-mono text-[10px] text-text-tertiary">
             Joined {new Date(member.joined_at).toLocaleDateString()}
           </span>
         </div>
